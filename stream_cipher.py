@@ -10,6 +10,8 @@ DECODE = '-d'
 
 random.seed(a=state)
 
+# \r (and maybe \x0b \x0c) seem to be causing off-by-one errors when parsing
+# the encoded file
 actually_printable = printable[:-3]
 
 lookup = {}
@@ -28,7 +30,6 @@ for char in text:
         results.append(char)
 
     else:
-
         offset = random.randrange(len(actually_printable))
         if flag == DECODE:
             offset *= -1
