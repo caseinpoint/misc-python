@@ -1,64 +1,53 @@
 """A very basic script for enciphering and deciphering text files using a stream method."""
 
-from string import printable
 import random
+from string import printable
 from sys import argv
-from datetime import datetime
 
 _, flag, filename, state = argv
-
-file_split = filename.split('.')
-if len(file_split) > 2:
-	file_split[:-1] = ['.'.join(file_split[:-1])]
+ENCODE = '-e'
+DECODE = '-d'
 
 random.seed(a=state)
 
-# 'a': 10
-ltr_idx = {}
-# 10: 'a'
-idx_ltr = {}
-for i, l in enumerate(printable[:-2]):
-	ltr_idx[l] = i
-	idx_ltr[i] = l
+actually_printable = printable[:-3]
 
-infile = open(filename, 'r')
+lookup = {}
+for idx, val in enumerate(actually_printable):
+    lookup[idx] = val
+    lookup[val] = idx
 
-new_chars = []
-for line in infile:
-	for char in line:
-		idx = ltr_idx.get(char, 71)
-		offset = random.randrange(len(ltr_idx))
+with open(file=filename, mode='r', errors='replace') as f:
+    text = f.read()
 
-		if flag == '-e':
-			idx += offset
-		elif flag == '-d':
-			idx -= offset
+results = []
+for char in text:
+    idx = lookup.get(char, None)
 
-		idx %= len(ltr_idx)
+    if idx is None:
+        results.append(char)
 
-		new_chars.append(idx_ltr[idx])
+    else:
 
-infile.close()
+        offset = random.randrange(len(actually_printable))
+        if flag == DECODE:
+            offset *= -1
 
-new_file = ''.join(reversed(file_split[0]))
-# test for pallindrome
-if new_file == file_split[0]:
-	new_file += flag
-new_file += '.' + file_split[1]
+        idx = (idx + offset) % len(actually_printable)
 
-outfile = open(new_file, 'w')
+        results.append(lookup[idx])
 
-# time_start = datetime.now()
-# for char in new_chars:
-#	outfile.write(char)
-# time_end = datetime.now()
+file_split = filename.split('.')
 
-# more efficient than for loop above
-# time_start = datetime.now()
-outfile.write(''.join(new_chars))
-# time_end = datetime.now()
+if ENCODE in file_split:
+    file_split.remove(ENCODE)
 
-outfile.close()
+elif DECODE in file_split:
+    file_split.remove(DECODE)
 
-# print(f'finished writing in {time_end - time_start}')
+file_split.insert(-1, flag)
 
+new_name = '.'.join(file_split)
+
+with open(file=new_name, mode='w', encoding='utf-16', errors='replace') as f:
+    f.write(''.join(results))
