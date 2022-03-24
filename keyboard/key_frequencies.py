@@ -1,15 +1,19 @@
+# from annotations import timed
 from glob import iglob
 from pprint import PrettyPrinter
 from re import compile, IGNORECASE
 from string import printable
 
 EXTENSIONS = {'py', 'js', 'json', 'jsx', 'html', 'css'}
-SKIP_PATTERNS = compile('migrations|bootstrap|jquery', IGNORECASE)
+SKIP_PATTERNS = compile(r'migrations|bootstrap|jquery|package-lock|node_modules', IGNORECASE)
 
 SHIFT_KEYS = {'~': '`', '!': '1', '@': '2', '#': '3', '$': '4', '%': '5', '^': '6', '&': '7', '*': '8', '(': '9', ')': '0',
 			  '_': '-', '+': '=', '{': '[', '}': ']', '|': '\\', ':': ';', '"': "'", '<': ',', '>': '.', '?': '/'}
 ALL_KEYS = set(printable)
 ALL_KEYS -= {'\r', '\x0b', '\x0c'}
+KEY_NAMES = {' ': 'SPACE', '\t': 'TAB', "'": 'APOSTRPHE', '\n': 'ENTER', ',': 'COMMA'}
+
+PP = PrettyPrinter(indent=2, sort_dicts=False)
 
 
 def find_files(path):
@@ -18,43 +22,53 @@ def find_files(path):
 		if split_dot[-1] in EXTENSIONS and SKIP_PATTERNS.search(filename) is None:
 			yield filename
 
-def process_file(filename, frequencies):
-	processed = False
+
+# @timed
+def process_file(filename, frequencies, totals):
+	# print(f'\n{filename}')
 
 	with open(filename) as f:
 		file_txt = f.read()
 
 	if len(file_txt) == 0:
-		return processed
-
-	frequencies['totals']['press_count'] += len(file_txt)
+		return False
 
 	for i in range(len(file_txt) - 1):
 		char = file_txt[i]
-		shifted = False
 		if char not in ALL_KEYS:
 			continue
-		elif char in SHIFT_KEYS:
+
+		shifted = False
+		if char in SHIFT_KEYS:
 			char = SHIFT_KEYS[char]
 			shifted = True
 		elif char.isupper():
 			char = char.lower()
 			shifted = True
 
-		next_char = file_txt[i + 1]
+		j = i + 1
+		while file_txt[j] not in ALL_KEYS:
+			j += 1
+		next_char = file_txt[j]
 		if next_char in SHIFT_KEYS:
 			next_char = SHIFT_KEYS[next_char]
 		elif next_char.isupper():
 			next_char = next_char.lower()
 
-		if char not in frequencies:
-			frequencies[char] = {'press_count': 0, 'shift_count': 0}
+		if char in KEY_NAMES:
+			char = KEY_NAMES[char]
+		if next_char in KEY_NAMES:
+			next_char = KEY_NAMES[next_char]
 
-		frequencies[char]['press_count'] += 1
+		if char not in frequencies:
+			frequencies[char] = {'keys': {}, 'totals': {'press_count': 0, 'shift_count': 0}}
+
+		totals['press_count'] += 1
+		frequencies[char]['totals']['press_count'] += 1
 		if shifted:
-			frequencies['totals']['shift_count'] += 1
-			frequencies[char]['shift_count'] += 1
-		frequencies[char][next_char] = frequencies[char].get(next_char, 0) + 1
+			totals['shift_count'] += 1
+			frequencies[char]['totals']['shift_count'] += 1
+		frequencies[char]['keys'][next_char] = frequencies[char]['keys'].get(next_char, 0) + 1
 
 	last_char = file_txt[-1]
 	if last_char in ALL_KEYS:
@@ -66,39 +80,76 @@ def process_file(filename, frequencies):
 			last_char = last_char.lower()
 			last_shift = True
 
+		if last_char in KEY_NAMES:
+			last_char = KEY_NAMES[last_char]
+
 		if last_char not in frequencies:
-			frequencies[last_char] = {'press_count': 0, 'shift_count': 0}
+			frequencies[last_char] = {'keys': {}, 'totals': {'press_count': 0, 'shift_count': 0}}
 
-		frequencies[last_char]['press_count'] += 1
+		frequencies[last_char]['totals']['press_count'] += 1
 		if last_shift:
-			frequencies['totals']['shift_count'] += 1
-			frequencies[last_char]['shift_count'] += 1
+			totals['shift_count'] += 1
+			frequencies[last_char]['totals']['shift_count'] += 1
 
-	processed = True
-	return processed
-
-
-def print_sorted(frequencies):
-	pass
+	return True
 
 
+# @timed
+def print_csv(frequencies):
+	keys_sorted = sorted(frequencies.keys(),
+						 key=lambda k: frequencies[k]['totals']['press_count'],
+						 reverse=True)
+	for key in keys_sorted:
+		next_sorted = sorted(frequencies[key]['keys'].items(),
+							 key=lambda i: i[1],
+							 reverse=True)
+
+		print(f'key:,{key}', end=',')
+		print(f'count:,{frequencies[key]["totals"]["press_count"]}', end=',')
+		print(f'shifted:,{frequencies[key]["totals"]["shift_percent"]}%')
+		# print('next:', end=',')
+		for next in next_sorted:
+			print(next[1], end=',')
+		print()
+		for next in next_sorted:
+			print(next[0], end=',')
+		print('\n')
+
+
+def print_top(frequencies, num):
+	keys_sorted = sorted(frequencies.keys(),
+						 key=lambda k: frequencies[k]['totals']['press_count'],
+						 reverse=True)
+	for key in keys_sorted:
+		next_sorted = sorted(frequencies[key]['keys'].items(),
+							 key=lambda i: i[1],
+							 reverse=True)
+		print(f'{" "*(10-len(key))}{key} {next_sorted[:num]}')
+
+
+# @timed
 def main():
 	print('processing...')
 
 	paths = ['/home/drue/Projects', '/home/drue/Hackbright/hb-dev/src/tools', '/home/drue/Hackbright/hb-dev/src/demos']
 	count_files = 0
 
-	frequencies = {'totals': {'press_count': 0, 'shift_count': 0}}
+	frequencies = {}
+	totals = {'press_count': 0, 'shift_count': 0}
 
 	for path in paths:
 		for filename in find_files(path):
-			processed = process_file(filename, frequencies)
+			processed = process_file(filename, frequencies, totals)
 			if processed:
 				count_files += 1
+	totals['count_files'] = count_files
+	# totals['avg_presses'] = totals['press_count'] / count_files
+	# totals['avg_shifts'] = totals['shift_count'] / count_files
 
-	for counts in frequencies.values():
-		counts['shift_ratio'] = counts['shift_count'] / counts['press_count']
+	for key, counts in frequencies.items():
+		counts['totals']['shift_percent'] = int(counts['totals']['shift_count'] / counts['totals']['press_count'] * 100)
+	totals['shift_percent'] = int(totals['shift_count'] / totals['press_count'] * 100)
 
-	print(f'Files processed: {count_files}')
-	pp = PrettyPrinter(indent=2, sort_dicts=False)
-	pp.pprint(frequencies)
+	# print_csv(frequencies)
+	print_top(frequencies, 5)
+	PP.pprint(totals)
