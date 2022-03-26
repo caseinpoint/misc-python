@@ -117,6 +117,7 @@ def print_csv(frequencies):
 
 
 def print_top(frequencies, num):
+	print(f'Keys by frequency (desc) and top {num} subsequent keys:')
 	keys_sorted = sorted(frequencies.keys(),
 						 key=lambda k: frequencies[k]['totals']['press_count'],
 						 reverse=True)
@@ -124,7 +125,12 @@ def print_top(frequencies, num):
 		next_sorted = sorted(frequencies[key]['keys'].items(),
 							 key=lambda i: i[1],
 							 reverse=True)
-		print(f'{" "*(10-len(key))}{key} {next_sorted[:num]}')
+		print(f'{" "*(10-len(key))}{key}', end=' ')
+		for i in range(num):
+			next = next_sorted[i]
+			percent = f'{int(next[1] / frequencies[key]["totals"]["press_count"] * 100)}%'
+			print(f'{next[0]}:{percent}', end=', ')
+		print()
 
 
 # @timed
@@ -153,3 +159,7 @@ def main():
 	# print_csv(frequencies)
 	print_top(frequencies, 5)
 	PP.pprint(totals)
+
+
+if __name__ == '__main__':
+	main()
