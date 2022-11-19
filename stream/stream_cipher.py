@@ -1,54 +1,69 @@
 """A very basic script for enciphering and deciphering text files using a stream method."""
 
 import random
-from string import printable
-from sys import argv
 
-_, flag, filename, state = argv
-ENCODE = '-e'
-DECODE = '-d'
 
-random.seed(a=state)
+def generate_lookup() -> dict:
+    """Create character lookup dictionary."""
 
-# \r (and maybe \x0b \x0c) seem to be causing off-by-one errors when parsing
-# the encoded file
-actually_printable = printable[:-3]
+    lookup = {0: '\t', '\t': 0, 1: '\n', '\n': 1}
+    idx = 2
 
-lookup = {}
-for idx, val in enumerate(actually_printable):
-    lookup[idx] = val
-    lookup[val] = idx
+    ranges = [(32,879), (8192,11193), (11197,11217), (11244,11247),
+              (119040,119272)]
+    for start, stop in ranges:
+        for i in range(start, stop + 1):
+            c = chr(i)
+            rc = repr(c)
 
-with open(file=filename, mode='r', errors='replace') as f:
-    text = f.read()
+            if len(rc) == 3:
+                lookup[idx] = c
+                lookup[c] = idx
+                idx += 1
 
-results = []
-for char in text:
-    idx = lookup.get(char, None)
+    return lookup
 
-    if idx is None:
-        results.append(char)
 
-    else:
-        offset = random.randrange(len(actually_printable))
-        if flag == DECODE:
-            offset *= -1
+def replace_text(text: str, lookup: dict, decode: bool = False) -> str:
+    """Translate text using lookup dict."""
 
-        idx = (idx + offset) % len(actually_printable)
+    stop = len(lookup) // 2
+    results = []
 
-        results.append(lookup[idx])
+    for char in text:
+        idx = lookup.get(char, None)
 
-file_split = filename.split('.')
+        if idx is None:
+            results.append(char)
 
-if ENCODE in file_split:
-    file_split.remove(ENCODE)
+        else:
+            offset = random.randrange(stop)
+            if decode:
+                offset *= -1
 
-elif DECODE in file_split:
-    file_split.remove(DECODE)
+            idx = (idx + offset) % stop
 
-file_split.insert(-1, flag)
+            results.append(lookup[idx])
 
-new_name = '.'.join(file_split)
+    return ''.join(results)
 
-with open(file=new_name, mode='w', encoding='utf-16', errors='replace') as f:
-    f.write(''.join(results))
+
+def main(flag: str, filename: str, seed: str) -> str:
+    random.seed(seed)
+
+    decode = True if flag == '-d' else False
+    lookup = generate_lookup()
+
+    with open(filename, 'r') as f:
+        file_text = f.read()
+
+    file_text = replace_text(file_text, lookup, decode)
+
+    with open(filename, 'w') as f:
+        f.write(file_text)
+
+
+if __name__ == '__main__':
+    from sys import argv
+
+    main(*argv[1:])

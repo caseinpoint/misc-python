@@ -1,4 +1,3 @@
-# from annotations import timed
 from glob import iglob
 from pprint import PrettyPrinter
 from re import compile, IGNORECASE
@@ -23,7 +22,6 @@ def find_files(path):
 			yield filename
 
 
-# @timed
 def process_file(filename, frequencies, totals):
 	# print(f'\n{filename}')
 
@@ -94,7 +92,6 @@ def process_file(filename, frequencies, totals):
 	return True
 
 
-# @timed
 def print_csv(frequencies):
 	keys_sorted = sorted(frequencies.keys(),
 						 key=lambda k: frequencies[k]['totals']['press_count'],
@@ -133,11 +130,10 @@ def print_top(frequencies, num):
 		print()
 
 
-# @timed
 def main():
 	print('processing...')
 
-	paths = ['/home/drue/Projects', '/home/drue/Hackbright/hb-dev/src/tools', '/home/drue/Hackbright/hb-dev/src/demos']
+	paths = ['/home/drue/HB/my_tools', '/home/drue/HB/demos', '/home/drue/Projects']
 	count_files = 0
 
 	frequencies = {}
