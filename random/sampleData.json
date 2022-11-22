@@ -1,76 +1,367 @@
-{'@context': ['https://geojson.org/geojson-ld/geojson-context.jsonld',
-              {'@version': '1.1',
-               '@vocab': 'https://api.weather.gov/ontology#',
-               'bearing': {'@type': 's:QuantitativeValue'},
-               'city': 's:addressLocality',
-               'county': {'@type': '@id'},
-               'distance': {'@id': 's:Distance',
-                            '@type': 's:QuantitativeValue'},
-               'forecastGridData': {'@type': '@id'},
-               'forecastOffice': {'@type': '@id'},
-               'geo': 'http://www.opengis.net/ont/geosparql#',
-               'geometry': {'@id': 's:GeoCoordinates',
-                            '@type': 'geo:wktLiteral'},
-               'publicZone': {'@type': '@id'},
-               's': 'https://schema.org/',
-               'state': 's:addressRegion',
-               'unit': 'http://codes.wmo.int/common/unit/',
-               'unitCode': {'@id': 's:unitCode', '@type': '@id'},
-               'value': {'@id': 's:value'},
-               'wx': 'https://api.weather.gov/ontology#'}],
- 'features': [{'geometry': {'coordinates': [-122.71, 38.4799999],
-                            'type': 'Point'},
-               'id': 'https://api.weather.gov/stations/RSAC1/observations/2022-11-21T21:29:00+00:00',
-               'properties': {'@id': 'https://api.weather.gov/stations/RSAC1/observations/2022-11-21T21:29:00+00:00',
-                              '@type': 'wx:ObservationStation',
-                              'barometricPressure': {'qualityControl': 'Z',
-                                                     'unitCode': 'wmoUnit:Pa',
-                                                     'value': None},
-                              'cloudLayers': [],
-                              'dewpoint': {'qualityControl': 'V',
-                                           'unitCode': 'wmoUnit:degC',
-                                           'value': -0.98},
-                              'elevation': {'unitCode': 'wmoUnit:m',
-                                            'value': 182.6},
-                              'heatIndex': {'qualityControl': 'V',
-                                            'unitCode': 'wmoUnit:degC',
-                                            'value': None},
-                              'icon': None,
-                              'maxTemperatureLast24Hours': {'unitCode': 'wmoUnit:degC',
-                                                            'value': None},
-                              'minTemperatureLast24Hours': {'unitCode': 'wmoUnit:degC',
-                                                            'value': None},
-                              'precipitationLast3Hours': {'qualityControl': 'Z',
-                                                          'unitCode': 'wmoUnit:mm',
-                                                          'value': None},
-                              'presentWeather': [],
-                              'rawMessage': '',
-                              'relativeHumidity': {'qualityControl': 'V',
-                                                   'unitCode': 'wmoUnit:percent',
-                                                   'value': 28.003356491106},
-                              'seaLevelPressure': {'qualityControl': 'Z',
-                                                   'unitCode': 'wmoUnit:Pa',
-                                                   'value': None},
-                              'station': 'https://api.weather.gov/stations/RSAC1',
-                              'temperature': {'qualityControl': 'V',
-                                              'unitCode': 'wmoUnit:degC',
-                                              'value': 17.78},
-                              'textDescription': '',
-                              'timestamp': '2022-11-21T21:29:00+00:00',
-                              'visibility': {'qualityControl': 'Z',
-                                             'unitCode': 'wmoUnit:m',
-                                             'value': None},
-                              'windChill': {'qualityControl': 'V',
-                                            'unitCode': 'wmoUnit:degC',
-                                            'value': None},
-                              'windDirection': {'qualityControl': 'V',
-                                                'unitCode': 'wmoUnit:degree_(angle)',
-                                                'value': 232},
-                              'windGust': {'qualityControl': 'S',
-                                           'unitCode': 'wmoUnit:km_h-1',
-                                           'value': 12.888},
-                              'windSpeed': {'qualityControl': 'V',
-                                            'unitCode': 'wmoUnit:km_h-1',
-                                            'value': 8.028}},
-               'type': 'Feature'}],
- 'type': 'FeatureCollection'}
+{
+  "@context": [
+    "https://geojson.org/geojson-ld/geojson-context.jsonld",
+    {
+      "@version": "1.1",
+      "wx": "https://api.weather.gov/ontology#",
+      "s": "https://schema.org/",
+      "geo": "http://www.opengis.net/ont/geosparql#",
+      "unit": "http://codes.wmo.int/common/unit/",
+      "@vocab": "https://api.weather.gov/ontology#",
+      "geometry": { "@id": "s:GeoCoordinates", "@type": "geo:wktLiteral" },
+      "city": "s:addressLocality",
+      "state": "s:addressRegion",
+      "distance": { "@id": "s:Distance", "@type": "s:QuantitativeValue" },
+      "bearing": { "@type": "s:QuantitativeValue" },
+      "value": { "@id": "s:value" },
+      "unitCode": { "@id": "s:unitCode", "@type": "@id" },
+      "forecastOffice": { "@type": "@id" },
+      "forecastGridData": { "@type": "@id" },
+      "publicZone": { "@type": "@id" },
+      "county": { "@type": "@id" }
+    }
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "id": "https://api.weather.gov/stations/PLEC1/observations/2022-11-22T20:28:00+00:00",
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-122.12, 37.93] },
+      "properties": {
+        "@id": "https://api.weather.gov/stations/PLEC1/observations/2022-11-22T20:28:00+00:00",
+        "@type": "wx:ObservationStation",
+        "elevation": { "unitCode": "wmoUnit:m", "value": 442 },
+        "station": "https://api.weather.gov/stations/PLEC1",
+        "timestamp": "2022-11-22T20:28:00+00:00",
+        "rawMessage": "",
+        "textDescription": "",
+        "icon": null,
+        "presentWeather": [],
+        "temperature": {
+          "unitCode": "wmoUnit:degC",
+          "value": 16.67,
+          "qualityControl": "V"
+        },
+        "dewpoint": {
+          "unitCode": "wmoUnit:degC",
+          "value": -1.45,
+          "qualityControl": "V"
+        },
+        "windDirection": {
+          "unitCode": "wmoUnit:degree_(angle)",
+          "value": 130,
+          "qualityControl": "V"
+        },
+        "windSpeed": {
+          "unitCode": "wmoUnit:km_h-1",
+          "value": 4.824,
+          "qualityControl": "V"
+        },
+        "windGust": {
+          "unitCode": "wmoUnit:km_h-1",
+          "value": 9.648,
+          "qualityControl": "S"
+        },
+        "barometricPressure": {
+          "unitCode": "wmoUnit:Pa",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "seaLevelPressure": {
+          "unitCode": "wmoUnit:Pa",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "visibility": {
+          "unitCode": "wmoUnit:m",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "maxTemperatureLast24Hours": {
+          "unitCode": "wmoUnit:degC",
+          "value": null
+        },
+        "minTemperatureLast24Hours": {
+          "unitCode": "wmoUnit:degC",
+          "value": null
+        },
+        "precipitationLast3Hours": {
+          "unitCode": "wmoUnit:mm",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "relativeHumidity": {
+          "unitCode": "wmoUnit:percent",
+          "value": 29.023073270041,
+          "qualityControl": "V"
+        },
+        "windChill": {
+          "unitCode": "wmoUnit:degC",
+          "value": null,
+          "qualityControl": "V"
+        },
+        "heatIndex": {
+          "unitCode": "wmoUnit:degC",
+          "value": null,
+          "qualityControl": "V"
+        },
+        "cloudLayers": []
+      }
+    },
+    {
+      "id": "https://api.weather.gov/stations/PLEC1/observations/2022-11-22T17:28:00+00:00",
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-122.12, 37.93] },
+      "properties": {
+        "@id": "https://api.weather.gov/stations/PLEC1/observations/2022-11-22T17:28:00+00:00",
+        "@type": "wx:ObservationStation",
+        "elevation": { "unitCode": "wmoUnit:m", "value": 442 },
+        "station": "https://api.weather.gov/stations/PLEC1",
+        "timestamp": "2022-11-22T17:28:00+00:00",
+        "rawMessage": "",
+        "textDescription": "",
+        "icon": null,
+        "presentWeather": [],
+        "temperature": {
+          "unitCode": "wmoUnit:degC",
+          "value": 14.44,
+          "qualityControl": "V"
+        },
+        "dewpoint": {
+          "unitCode": "wmoUnit:degC",
+          "value": -1.63,
+          "qualityControl": "V"
+        },
+        "windDirection": {
+          "unitCode": "wmoUnit:degree_(angle)",
+          "value": 146,
+          "qualityControl": "V"
+        },
+        "windSpeed": {
+          "unitCode": "wmoUnit:km_h-1",
+          "value": 6.444,
+          "qualityControl": "V"
+        },
+        "windGust": {
+          "unitCode": "wmoUnit:km_h-1",
+          "value": 9.648,
+          "qualityControl": "S"
+        },
+        "barometricPressure": {
+          "unitCode": "wmoUnit:Pa",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "seaLevelPressure": {
+          "unitCode": "wmoUnit:Pa",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "visibility": {
+          "unitCode": "wmoUnit:m",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "maxTemperatureLast24Hours": {
+          "unitCode": "wmoUnit:degC",
+          "value": null
+        },
+        "minTemperatureLast24Hours": {
+          "unitCode": "wmoUnit:degC",
+          "value": null
+        },
+        "precipitationLast3Hours": {
+          "unitCode": "wmoUnit:mm",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "relativeHumidity": {
+          "unitCode": "wmoUnit:percent",
+          "value": 33.040051416139,
+          "qualityControl": "V"
+        },
+        "windChill": {
+          "unitCode": "wmoUnit:degC",
+          "value": null,
+          "qualityControl": "V"
+        },
+        "heatIndex": {
+          "unitCode": "wmoUnit:degC",
+          "value": null,
+          "qualityControl": "V"
+        },
+        "cloudLayers": []
+      }
+    },
+    {
+      "id": "https://api.weather.gov/stations/PLEC1/observations/2022-11-22T16:28:00+00:00",
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-122.12, 37.93] },
+      "properties": {
+        "@id": "https://api.weather.gov/stations/PLEC1/observations/2022-11-22T16:28:00+00:00",
+        "@type": "wx:ObservationStation",
+        "elevation": { "unitCode": "wmoUnit:m", "value": 442 },
+        "station": "https://api.weather.gov/stations/PLEC1",
+        "timestamp": "2022-11-22T16:28:00+00:00",
+        "rawMessage": "",
+        "textDescription": "",
+        "icon": null,
+        "presentWeather": [],
+        "temperature": {
+          "unitCode": "wmoUnit:degC",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "dewpoint": {
+          "unitCode": "wmoUnit:degC",
+          "value": -1.32,
+          "qualityControl": "V"
+        },
+        "windDirection": {
+          "unitCode": "wmoUnit:degree_(angle)",
+          "value": 161,
+          "qualityControl": "V"
+        },
+        "windSpeed": {
+          "unitCode": "wmoUnit:km_h-1",
+          "value": 8.028,
+          "qualityControl": "V"
+        },
+        "windGust": {
+          "unitCode": "wmoUnit:km_h-1",
+          "value": 11.268,
+          "qualityControl": "S"
+        },
+        "barometricPressure": {
+          "unitCode": "wmoUnit:Pa",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "seaLevelPressure": {
+          "unitCode": "wmoUnit:Pa",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "visibility": {
+          "unitCode": "wmoUnit:m",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "maxTemperatureLast24Hours": {
+          "unitCode": "wmoUnit:degC",
+          "value": null
+        },
+        "minTemperatureLast24Hours": {
+          "unitCode": "wmoUnit:degC",
+          "value": null
+        },
+        "precipitationLast3Hours": {
+          "unitCode": "wmoUnit:mm",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "relativeHumidity": {
+          "unitCode": "wmoUnit:percent",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "windChill": {
+          "unitCode": "wmoUnit:degC",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "heatIndex": {
+          "unitCode": "wmoUnit:degC",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "cloudLayers": []
+      }
+    },
+    {
+      "id": "https://api.weather.gov/stations/PLEC1/observations/2022-11-22T14:28:00+00:00",
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-122.12, 37.93] },
+      "properties": {
+        "@id": "https://api.weather.gov/stations/PLEC1/observations/2022-11-22T14:28:00+00:00",
+        "@type": "wx:ObservationStation",
+        "elevation": { "unitCode": "wmoUnit:m", "value": 442 },
+        "station": "https://api.weather.gov/stations/PLEC1",
+        "timestamp": "2022-11-22T14:28:00+00:00",
+        "rawMessage": "",
+        "textDescription": "",
+        "icon": null,
+        "presentWeather": [],
+        "temperature": {
+          "unitCode": "wmoUnit:degC",
+          "value": 10,
+          "qualityControl": "V"
+        },
+        "dewpoint": {
+          "unitCode": "wmoUnit:degC",
+          "value": -3.32,
+          "qualityControl": "V"
+        },
+        "windDirection": {
+          "unitCode": "wmoUnit:degree_(angle)",
+          "value": 159,
+          "qualityControl": "V"
+        },
+        "windSpeed": {
+          "unitCode": "wmoUnit:km_h-1",
+          "value": 8.028,
+          "qualityControl": "V"
+        },
+        "windGust": {
+          "unitCode": "wmoUnit:km_h-1",
+          "value": 12.888,
+          "qualityControl": "S"
+        },
+        "barometricPressure": {
+          "unitCode": "wmoUnit:Pa",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "seaLevelPressure": {
+          "unitCode": "wmoUnit:Pa",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "visibility": {
+          "unitCode": "wmoUnit:m",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "maxTemperatureLast24Hours": {
+          "unitCode": "wmoUnit:degC",
+          "value": null
+        },
+        "minTemperatureLast24Hours": {
+          "unitCode": "wmoUnit:degC",
+          "value": null
+        },
+        "precipitationLast3Hours": {
+          "unitCode": "wmoUnit:mm",
+          "value": null,
+          "qualityControl": "Z"
+        },
+        "relativeHumidity": {
+          "unitCode": "wmoUnit:percent",
+          "value": 39.038280381628,
+          "qualityControl": "V"
+        },
+        "windChill": {
+          "unitCode": "wmoUnit:degC",
+          "value": null,
+          "qualityControl": "V"
+        },
+        "heatIndex": {
+          "unitCode": "wmoUnit:degC",
+          "value": null,
+          "qualityControl": "V"
+        },
+        "cloudLayers": []
+      }
+    }
+  ]
+}
