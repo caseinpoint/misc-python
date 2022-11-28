@@ -45,7 +45,7 @@ def get_weather_seed(num_bytes=64):
         station_url = choice(CAL_STATIONS)
         station_query_res = get(url=station_url+'/observations',
                                 headers=API_HEADERS,
-                                params={'limit': 1})
+                                params={'limit': 4})
         station_data = station_query_res.json()
 
     values = []
