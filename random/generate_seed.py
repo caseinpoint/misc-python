@@ -34,6 +34,32 @@ with open('./calStations.json') as f:
     CAL_STATIONS = load(f)
 
 
+def get_weather_seed(num_bytes=64):
+    station_url = choice(CAL_STATIONS)
+    station_query_res = get(url=station_url+'/observations',
+                            headers=API_HEADERS,
+                            params={'limit': 4})
+    station_data = station_query_res.json()
+
+    while len(station_data['features']) == 0:
+        station_url = choice(CAL_STATIONS)
+        station_query_res = get(url=station_url+'/observations',
+                                headers=API_HEADERS,
+                                params={'limit': 1})
+        station_data = station_query_res.json()
+
+    values = []
+    for feature in station_data['features']:
+        for key, property in feature['properties'].items():
+            if isinstance(property, dict):
+                if property['value'] is not None and property['value'] != 0:
+                    values.append(key + str(property['value']))
+
+    value_choice = choice(values)
+    random.seed(value_choice)
+    return random.randbytes(num_bytes)
+
+
 def get_wifi_seed(num_bytes=64):
     wifi_scan_result = run(['sudo', 'iwlist', 'scan'],
                            capture_output=True,
@@ -66,33 +92,6 @@ def get_cpu_seed(num_bytes=64):
     sensor_choice = str(choice(inputs))
     random.seed(sensor_choice)
     return random.randbytes(num_bytes)
-
-
-def get_weather_seed(num_bytes=64):
-    station_url = choice(CAL_STATIONS)
-    station_query_res = get(url=station_url+'/observations',
-                            headers=API_HEADERS,
-                            params={'limit': 4})
-    station_data = station_query_res.json()
-
-    while len(station_data['features']) == 0:
-        station_url = choice(CAL_STATIONS)
-        station_query_res = get(url=station_url+'/observations',
-                                headers=API_HEADERS,
-                                params={'limit': 1})
-        station_data = station_query_res.json()
-
-    values = []
-    for feature in station_data['features']:
-        for key, property in feature['properties'].items():
-            if isinstance(property, dict):
-                if property['value'] is not None and property['value'] != 0:
-                    values.append(key + str(property['value']))
-
-    value_choice = choice(values)
-    random.seed(value_choice)
-    return random.randbytes(num_bytes)
-
 
 
 if __name__ == '__main__':
