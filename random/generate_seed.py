@@ -51,6 +51,8 @@ def get_weather_seed(num_bytes=64):
     values = []
     for feature in station_data['features']:
         for key, property in feature['properties'].items():
+            if key == 'elevation':
+                continue
             if isinstance(property, dict):
                 if property['value'] is not None and property['value'] != 0:
                     values.append(key + str(property['value']))
